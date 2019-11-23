@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
-
+using UnityEngine.SceneManagement;
 
 public class Login : MonoBehaviour {
 	public InputField UserName;
@@ -61,22 +58,24 @@ public class Login : MonoBehaviour {
 		yield return www.SendWebRequest();
 
 		Dictionary<string, string> headers = www.GetResponseHeaders();
-		if (www.isNetworkError || www.isHttpError || !headers.ContainsKey("Authorization")) {
-			Debug.Log("Login failed");
+		if (www.isNetworkError || www.isHttpError) {
+			MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+		}
+		else if (!headers.ContainsKey("Authorization")) {
+			MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_INVALID_CREDENTIALS);
 		}
 		else {
 			Shared._AUTHORIATION = headers["Authorization"];
 			Shared._USERNAME = UserName.text;
 			Shared._PASSWORD = Password.text;
-			Debug.Log("Login complete! " + www.responseCode + " " + www.downloadedBytes);
-			Dictionary<string, string>.KeyCollection keys = headers.Keys;
-			foreach (string key in keys) {
-				Debug.Log(key + ": " + headers[key]);
-			}
+			MessageManager.INSTANCE.PlaySuccessSound();
+			yield return new WaitForSeconds(2);
+			SceneManager.LoadScene("Purchased", LoadSceneMode.Single);
 		}
 	}
 
 	public void CreateAccount() {
+		SceneManager.LoadScene("AddAccount", LoadSceneMode.Single);
 	}
 	
 }

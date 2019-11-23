@@ -29,33 +29,43 @@ namespace Purchased {
             try {
                 if (null == Shared._OWNED) {
                     HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
+                    request.Headers["Authorization"] = Shared._AUTHORIATION;
+
                     HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-                    StreamReader reader = new StreamReader(response.GetResponseStream());
-                    string jsonResponse = reader.ReadToEnd();
+
+                    if ( HttpStatusCode.OK != response.StatusCode ) {
+                        MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_UNABLE_TO_OBTAIN_BOOK_LIST);
+                    } else {
+                        StreamReader reader = new StreamReader(response.GetResponseStream());
+                        string jsonResponse = reader.ReadToEnd();
                     
-                    Shared._OWNED = JsonUtility.FromJson<OwnedEntryArray>("{ \"OwnedEntries\": " + jsonResponse + "}");
-                }
-                if (null == Shared._OWNED) {
-                    // TODO: Error
+                        Shared._OWNED = JsonUtility.FromJson<OwnedEntryArray>("{ \"OwnedEntries\": " + jsonResponse + "}");
+                    }
                 }
             } catch (Exception e) {
-                // TODO: Error
+                MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+            }
+            if (null == Shared._OWNED) {
+                yield break; // exit
             }
 
             // 2. Get information for each book.
-            try {
-                foreach (OwnedEntry ownedEntry in Shared._OWNED.OwnedEntries) {
+            foreach (OwnedEntry ownedEntry in Shared._OWNED.OwnedEntries) {
+                try {
                     string bookKey = ownedEntry.MakeKey();
                     if (Shared._BOOK_INFO.ContainsKey(bookKey)) { continue; }
                     HttpWebRequest request = (HttpWebRequest) WebRequest.Create(String.Format(_URL_BASE + "{0}/{1}", ownedEntry.id, ownedEntry.issue));
+                    request.Headers["Authorization"] = Shared._AUTHORIATION;
+
                     HttpWebResponse response = (HttpWebResponse) request.GetResponse();
                     StreamReader reader = new StreamReader(response.GetResponseStream());
                     string jsonResponse = reader.ReadToEnd();
                     Pages pages = JsonUtility.FromJson<Pages>(jsonResponse);
                     Shared._BOOK_INFO.Add(bookKey, pages);
+                } catch (Exception e) {
+                    MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+                    Debug.Log(e.ToString());
                 }
-            } catch (Exception e) {
-                // TODO: Error
             }
 
             // 3. Remove old display items.
@@ -63,7 +73,6 @@ namespace Purchased {
                 Transform child = ContentPanel.transform.GetChild(0);
                 child.transform.parent= null;
                 Destroy(child.gameObject);
-                Debug.Log(ContentPanel.transform.childCount);
             }
             
             // 4. Sort books.
@@ -79,6 +88,8 @@ namespace Purchased {
                 GameObject newCover = Instantiate(ListItemPrefab) as GameObject;
                 ListItemController controller = newCover.GetComponent<ListItemController>();
                 controller.Title.text = pages.title+ " #" + pages.issue;
+                controller.Id = pages.id;
+                controller.Issue = pages.issue;
                 
                 string coverURL = _URL_BASE;
                 coverURL += pages.id + "/";

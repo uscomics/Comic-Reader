@@ -3,14 +3,17 @@ using System.Collections;
 using System.IO;
 using System.Net;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Reader {
 	public class Reader : MonoBehaviour {
 		public GameObject ImageCanvas;
 		public GameObject RawImage;
+		public GameObject ButtonPanel;
 		public Button FirstButton;
 		public Button PrevButton;
+		public Button HomeButton;
 		public Button NextButton;
 		public Button LastButton;
 		private int _currentPage;
@@ -21,10 +24,11 @@ namespace Reader {
 		private static float _DISPLAY_CONTROL_DURATION = 5.0f;
 
 		void Start() {
-			GetManifest("legends_pacific", 1);
+			GetManifest(Shared._CURRENT_BOOK_ID, Shared._CURRENT_BOOK_ISSUE);
 			LoadPage();
 			FirstButton.GetComponent<Button>().onClick.AddListener(() => { FirstClick(); });
 			PrevButton.GetComponent<Button>().onClick.AddListener(() => { PrevClick(); });
+			HomeButton.GetComponent<Button>().onClick.AddListener(() => { HomeClick(); });
 			NextButton.GetComponent<Button>().onClick.AddListener(() => { NextClick(); });
 			LastButton.GetComponent<Button>().onClick.AddListener(() => { LastClick(); });
 			_timeOfLastMouseMovement = Time.fixedTime;
@@ -87,12 +91,18 @@ namespace Reader {
 		}
 
 		public void GetManifest(string id, int issue) {
-			HttpWebRequest request = (HttpWebRequest) WebRequest.Create(String.Format(_URL_BASE + "{0}/{1}", id, issue));
-			HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-			StreamReader reader = new StreamReader(response.GetResponseStream());
-			string jsonResponse = reader.ReadToEnd();
-			_pages = JsonUtility.FromJson<Pages>(jsonResponse);
-			_currentPage = 0;
+			try {
+				HttpWebRequest request = (HttpWebRequest) WebRequest.Create(String.Format(_URL_BASE + "{0}/{1}", id, issue));
+				request.Headers["Authorization"] = Shared._AUTHORIATION;
+				
+				HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+				StreamReader reader = new StreamReader(response.GetResponseStream());
+				string jsonResponse = reader.ReadToEnd();
+				_pages = JsonUtility.FromJson<Pages>(jsonResponse);
+				_currentPage = 0;
+			} catch (Exception e) {
+				MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+			}
 		}
 
 		public void LoadPage() {
@@ -140,6 +150,12 @@ namespace Reader {
 			_timeOfLastMouseMovement = Time.fixedTime;
 		}
 
+		void HomeClick() {
+			Shared._CURRENT_BOOK_ID = null;
+			Shared._CURRENT_BOOK_ISSUE = 0;
+			SceneManager.LoadScene("Purchased", LoadSceneMode.Single);
+		}
+
 		void NextClick() {
 			if (!NextButton.interactable) return;
 			if (_pages.pages.Length - 1 == _currentPage) return;
@@ -157,15 +173,19 @@ namespace Reader {
 		}
 
 		void HideControls() {
+			ButtonPanel.gameObject.SetActive(false);
 			FirstButton.gameObject.SetActive(false);
 			PrevButton.gameObject.SetActive(false);
+			HomeButton.gameObject.SetActive(false);
 			NextButton.gameObject.SetActive(false);
 			LastButton.gameObject.SetActive(false);
 		}
 
 		void ShowControls() {
+			ButtonPanel.gameObject.SetActive(true);
 			FirstButton.gameObject.SetActive(true);
 			PrevButton.gameObject.SetActive(true);
+			HomeButton.gameObject.SetActive(true);
 			NextButton.gameObject.SetActive(true);
 			LastButton.gameObject.SetActive(true);
 		}
