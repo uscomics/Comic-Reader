@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -12,8 +15,10 @@ public class Login : MonoBehaviour {
 	public Button LoginButton;
 	public Button CreateAccountButton;
 	private IEnumerator _coroutine;
+	private static string _URL_BASE = Shared._URL_BASE + "comics/";
  
 	void Start () {
+		Screen.fullScreen = false;
 		LoginButton.GetComponent<Button>().onClick.AddListener(() => { SendCredentials(); }); 
 		CreateAccountButton.GetComponent<Button>().onClick.AddListener(() => { CreateAccount(); }); 
 	}
@@ -68,9 +73,23 @@ public class Login : MonoBehaviour {
 			Shared._AUTHORIATION = headers["Authorization"];
 			Shared._USERNAME = UserName.text;
 			Shared._PASSWORD = Password.text;
-			MessageManager.INSTANCE.PlaySuccessSound();
-			yield return new WaitForSeconds(2);
-			SceneManager.LoadScene("Purchased", LoadSceneMode.Single);
+			
+			HttpWebRequest request = (HttpWebRequest) WebRequest.Create(String.Format(Shared._URL_BASE + "favorites/{0}", Shared._USERNAME));
+			request.Headers["Authorization"] = Shared._AUTHORIATION;
+			HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+			if (HttpStatusCode.OK == response.StatusCode || HttpStatusCode.NotFound == response.StatusCode) {
+				StreamReader reader = new StreamReader(response.GetResponseStream());
+				string jsonResponse = reader.ReadToEnd();
+				Shared._FAVORITES = JsonUtility.FromJson<Reader.Issues>("{ \"issues\":" + jsonResponse + "}");
+				
+				Debug.Log(jsonResponse);
+				
+				MessageManager.INSTANCE.PlaySuccessSound();
+				yield return new WaitForSeconds(2);
+				SceneManager.LoadScene("Purchased", LoadSceneMode.Single);
+			} else {
+				MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+			}
 		}
 	}
 

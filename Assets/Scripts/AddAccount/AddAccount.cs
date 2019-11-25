@@ -82,7 +82,7 @@ namespace AddAccount {
                 form.AddField("lastName", LastName.text);
                 form.AddField("group1", "user");
                 form.AddField("destination", "./src/authentication/authentication.json");
-                UnityWebRequest www = UnityWebRequest.Post(Shared._URL_BASE + "account/add", form);
+                UnityWebRequest www = UnityWebRequest.Post(Shared._URL_BASE + "user/add/data", form);
                 yield return www.SendWebRequest();
 
                 if (www.isNetworkError || www.isHttpError) {

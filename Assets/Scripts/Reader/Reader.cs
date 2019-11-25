@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using UnityEngine;
@@ -190,7 +191,40 @@ namespace Reader {
 			LastButton.gameObject.SetActive(true);
 		}
 	}
-	
+
+	[Serializable]
+	public class Issue {
+		public string id;
+		public int issue;
+	}
+
+	[Serializable]
+	public class Issues {
+		public List<Issue> issues;
+
+		public bool HasIssue(string id, int issue) {
+			foreach (Issue book in issues) {
+				if (book.id != id || book.issue != issue) continue;
+				return true;
+			}
+			return false;
+		}
+		public void AddIssue(string id, int issue) {
+			if (HasIssue(id, issue)) return;
+			Issue newIssue = new Issue();
+			newIssue.id = id;
+			newIssue.issue = issue;
+			issues.Add(newIssue);
+		}
+		public void RemoveIssue(string id, int issue) {
+			foreach (Issue i in issues) {
+				if (i.id != id || i.issue != issue) continue;
+				issues.Remove(i);
+				break;
+			}
+		}
+	}
+
 	[Serializable]
 	public class Pages {
 		public string id;
@@ -199,6 +233,14 @@ namespace Reader {
 		public string[] pages;
 		public string cover;
 		public string[] preview;
+		public string descriptionTitle1;
+		public string description1;
+		public string descriptionTitle2;
+		public string description2;
+		public string descriptionTitle3;
+		public string description3;
+		public string price;
+		public Issue[] seeAlso;
 	}
 
 }

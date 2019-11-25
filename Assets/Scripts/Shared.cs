@@ -16,4 +16,6 @@ public class Shared
     public static Dictionary<string, Pages> _BOOK_INFO = new Dictionary<string, Pages>();
     public static string _CURRENT_BOOK_ID = null;
     public static int _CURRENT_BOOK_ISSUE = 0;
+    public static Issues _FAVORITES = new Issues() { issues = new List<Issue>() };
+    public static Issues _CART = new Issues() { issues = new List<Issue>() };
 }
