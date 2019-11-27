@@ -864,18 +864,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 392383817}
   m_CullTransparentMesh: 0
---- !u!114 &447756374 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2071272132207826287, guid: b574fc03a85dc394b90124c8cc4ee241,
-    type: 3}
-  m_PrefabInstance: {fileID: 2071272131846073657}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &585125256
 GameObject:
   m_ObjectHideFlags: 0
@@ -2758,7 +2746,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.11764707, g: 0.078431375, b: 0.18039216, a: 1}
+  m_BackGroundColor: {r: 0.02745098, g: 0.23921569, b: 0.42745098, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2839,7 +2827,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Message: {fileID: 1624436290}
   MessageCanvasGroup: {fileID: 2016598169}
-  ImageImage: {fileID: 447756374}
   ImageMessage: {fileID: 331345143}
   ImageMessageCanvasGroup: {fileID: 1776479763}
   Lifetime: 5
@@ -2857,7 +2844,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

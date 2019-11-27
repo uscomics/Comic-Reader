@@ -1,23 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class Messages {
     public enum Language {en_US};
-    public static int ERROR_USERNAME_REQUIRED = 1;
-    public static int ERROR_INVALID_USERNAME = 2;
-    public static int ERROR_INVALID_USERNAME_LENGTH = 3;
-    public static int ERROR_PASSWORD_REQUIRED = 4;
-    public static int ERROR_PASSWORD_LENGTH = 5;
-    public static int ERROR_PASSWORDS_DO_NOT_MATCH = 6;
-    public static int ERROR_INVALID_EMAIL = 7;
-    public static int SUCCESS_ACCOUNT_ADDED = 8;
-    public static int ERROR_NETWORK = 9;
-    public static int ERROR_INVALID_CREDENTIALS = 10;
-    public static int SUCCESS_LOGIN = 11;
-    public static int ERROR_UNABLE_TO_OBTAIN_BOOK_LIST = 12;
+    public static readonly int ERROR_USERNAME_REQUIRED = 1;
+    public static readonly int ERROR_INVALID_USERNAME = 2;
+    public static readonly int ERROR_INVALID_USERNAME_LENGTH = 3;
+    public static readonly int ERROR_PASSWORD_REQUIRED = 4;
+    public static readonly int ERROR_PASSWORD_LENGTH = 5;
+    public static readonly int ERROR_PASSWORDS_DO_NOT_MATCH = 6;
+    public static readonly int ERROR_INVALID_EMAIL = 7;
+    public static readonly int SUCCESS_ACCOUNT_ADDED = 8;
+    public static readonly int ERROR_NETWORK = 9;
+    public static readonly int ERROR_INVALID_CREDENTIALS = 10;
+    public static readonly int SUCCESS_LOGIN = 11;
+    public static readonly int ERROR_UNABLE_TO_OBTAIN_BOOK_LIST = 12;
 
     private static readonly string[] messages_en_US = {
         "A user name is required.",
@@ -49,7 +47,7 @@ public class MessageManager : MonoBehaviour {
     
     public TextMeshProUGUI Message;
     public CanvasGroup MessageCanvasGroup;
-    public Image ImageImage;
+    public ImageHelper ImageImage;
     public TextMeshProUGUI ImageMessage;
     public CanvasGroup ImageMessageCanvasGroup;
     public int Lifetime = 5; // seconds
@@ -89,15 +87,19 @@ public class MessageManager : MonoBehaviour {
             Debug.LogError("MessageManager::ShowMessage: Invalide message.");
             return;
         }
+        ShowMessage(message, inUseSound, inLifetime);
+    }
+
+    public void ShowMessage(string inMessage, Sound inUseSound = Sound.UseErrorSound, int inLifetime = -1) {
         if (true == Visible) {
-            _messageQueue.Enqueue(new QueuedMessage(inMessageId, inUseSound, inLifetime));
+            _messageQueue.Enqueue(new QueuedMessage(inMessage, inUseSound, inLifetime));
             return;
         }
         if (-1 != inLifetime) Lifetime = inLifetime;
         else Lifetime = DefaultLifetime;
         Visible = true;
         StartTime = Time.time;
-        Message.text = message;
+        Message.text = inMessage;
         MessageCanvasGroup.alpha = 1;
         MessageCanvasGroup.interactable = true;
         MessageCanvasGroup.blocksRaycasts = true;
@@ -121,7 +123,7 @@ public class MessageManager : MonoBehaviour {
         StartTime = 0;
         if (0 == _messageQueue.Count) { return; }
         QueuedMessage msg = _messageQueue.Dequeue();
-        ShowMessage(msg.MessageId, msg.Sound, msg.Lifetime);
+        ShowMessage(msg.Message, msg.Sound, msg.Lifetime);
     }
 
     public void ShowImageMessage(int inMessageId, Sound inUseSound = Sound.UseErrorSound, int inLifetime = -1) {
@@ -130,15 +132,20 @@ public class MessageManager : MonoBehaviour {
             Debug.LogError("MessageManager::ShowMessage: Invalide message.");
             return;
         }
+        ShowImageMessage(message, inUseSound, inLifetime);
+    }
+
+    public void ShowImageMessage(string inMessage, Sound inUseSound = Sound.UseErrorSound, int inLifetime = -1) {
         if (Visible) {
-            _imageMessageQueue.Enqueue(new QueuedMessage(inMessageId, inUseSound, inLifetime));
+            _imageMessageQueue.Enqueue(new QueuedMessage(inMessage, inUseSound, inLifetime));
             return;
         }
+
         if (-1 != inLifetime) Lifetime = inLifetime;
         else Lifetime = DefaultLifetime;
         Visible = true;
         StartTime = Time.time;
-        ImageMessage.text = message;
+        ImageMessage.text = inMessage;
         ImageMessageCanvasGroup.alpha = 1;
         ImageMessageCanvasGroup.interactable = true;
         ImageMessageCanvasGroup.blocksRaycasts = true;
@@ -154,17 +161,17 @@ public class MessageManager : MonoBehaviour {
         StartTime = 0;
         if (0 == _imageMessageQueue.Count) { return; }
         QueuedMessage msg = _imageMessageQueue.Dequeue();
-        ShowImageMessage( msg.MessageId, msg.Sound, msg.Lifetime );
+        ShowImageMessage( msg.Message, msg.Sound, msg.Lifetime );
     }
 }
 
 public class QueuedMessage {
-    public QueuedMessage(int inMessageId, MessageManager.Sound inUseSound, int inLifetime) {
-        MessageId = inMessageId;
+    public QueuedMessage(string inMessage, MessageManager.Sound inUseSound, int inLifetime) {
+        Message = inMessage;
         Sound = inUseSound;
         Lifetime = inLifetime;
     }
-    public readonly int MessageId;
+    public readonly string Message;
     public readonly MessageManager.Sound Sound;    
     public readonly int Lifetime;
 }

@@ -80,10 +80,8 @@ public class Login : MonoBehaviour {
 			if (HttpStatusCode.OK == response.StatusCode || HttpStatusCode.NotFound == response.StatusCode) {
 				StreamReader reader = new StreamReader(response.GetResponseStream());
 				string jsonResponse = reader.ReadToEnd();
-				Shared._FAVORITES = JsonUtility.FromJson<Reader.Issues>("{ \"issues\":" + jsonResponse + "}");
-				
-				Debug.Log(jsonResponse);
-				
+				Shared._FAVORITES = JsonUtility.FromJson<IssueList>("{ \"issues\":" + jsonResponse + "}");
+								
 				MessageManager.INSTANCE.PlaySuccessSound();
 				yield return new WaitForSeconds(2);
 				SceneManager.LoadScene("Purchased", LoadSceneMode.Single);

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Purchased {
-    public class ListItemController : MonoBehaviour, IPointerClickHandler {
+    public class PurchasedController : MonoBehaviour, IPointerClickHandler {
         public RawImage Cover;
         public Text Title;
         public string Id;

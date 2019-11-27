@@ -8,7 +8,7 @@ namespace StoreItem {
         public RawImage MainPreviewImge;
         public RawImage PreviewImge;
         
-        public void OnPointerClick(PointerEventData eventData) // 3
+        public void OnPointerClick(PointerEventData eventData)
         {
             MainPreviewImge.texture = PreviewImge.texture;
         }

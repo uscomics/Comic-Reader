@@ -10,7 +10,7 @@ namespace StoreItem {
         public int Issue;
         public GameObject StoreItemScript;
             
-        public void OnPointerClick(PointerEventData eventData) // 3
+        public void OnPointerClick(PointerEventData eventData)
         {
             Shared._CURRENT_BOOK_ID = Id;
             Shared._CURRENT_BOOK_ISSUE = Issue;

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,13 +15,16 @@ namespace Reader {
 		public Button NextButton;
 		public Button LastButton;
 		private int _currentPage;
-		private Pages _pages;
+		private Book _book;
 		private static string _URL_BASE = Shared._URL_BASE + "comics/";
 		private IEnumerator _coroutine;
 		private float _timeOfLastMouseMovement;
 		private static float _DISPLAY_CONTROL_DURATION = 5.0f;
 
 		void Start() {
+			if (String.IsNullOrEmpty(Shared._USERNAME)) Shared._USERNAME = "dave";
+			if (String.IsNullOrEmpty(Shared._CURRENT_BOOK_ID)) Shared._CURRENT_BOOK_ID = "gold_venus";
+			if (0 == Shared._CURRENT_BOOK_ISSUE) Shared._CURRENT_BOOK_ISSUE = 1;
 			GetManifest(Shared._CURRENT_BOOK_ID, Shared._CURRENT_BOOK_ISSUE);
 			LoadPage();
 			FirstButton.GetComponent<Button>().onClick.AddListener(() => { FirstClick(); });
@@ -44,7 +44,7 @@ namespace Reader {
 				PrevButton.interactable = true;
 			}
 
-			if (_pages.pages.Length - 1 == _currentPage) {
+			if (_book.pages.Length - 1 == _currentPage) {
 				NextButton.interactable = false;
 				LastButton.interactable = false;
 			} else {
@@ -73,66 +73,18 @@ namespace Reader {
 			}
 		}
 
-		public float GetImageWidth() {
-			return RawImage.GetComponent<RawImage>().texture.width;
-		}
-
-		public float GetImageHeight() {
-			return RawImage.GetComponent<RawImage>().texture.height;
-		}
-
-		public float GetCanvasWidth() {
-			RectTransform objectRectTransform = ImageCanvas.GetComponent<RectTransform>();
-			return objectRectTransform.rect.width;
-		}
-
-		public float GetCanvasHeight() {
-			RectTransform objectRectTransform = ImageCanvas.GetComponent<RectTransform>();
-			return objectRectTransform.rect.height;
-		}
-
 		public void GetManifest(string id, int issue) {
-			try {
-				HttpWebRequest request = (HttpWebRequest) WebRequest.Create(String.Format(_URL_BASE + "{0}/{1}", id, issue));
-				request.Headers["Authorization"] = Shared._AUTHORIATION;
-				
-				HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-				StreamReader reader = new StreamReader(response.GetResponseStream());
-				string jsonResponse = reader.ReadToEnd();
-				_pages = JsonUtility.FromJson<Pages>(jsonResponse);
-				_currentPage = 0;
-			} catch (Exception e) {
-				MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
-			}
+			string url = String.Format(_URL_BASE + "{0}/{1}", id, issue);
+			_book = Book.GetFromServer(url);
+			_currentPage = 0;
 		}
 
 		public void LoadPage() {
-			if (null == _pages) return;
-			string url = _URL_BASE;
-			url += _pages.id + "/";
-			url += _pages.issue + "/";
-			url += _pages.pages[_currentPage];
-			_coroutine = SetImageFromURL(url);
+			if (null == _book) return;
+			string url = String.Format(_URL_BASE + "{0}/{1}/{2}", _book.id, _book.issue, _book.pages[_currentPage]);
+			ImageHelper imageHelper = new ImageHelper();
+			_coroutine = imageHelper.SetImageFromURL(RawImage.GetComponent<RawImage>(), url);
 			StartCoroutine(_coroutine);
-		}
-
-		public IEnumerator SetImageFromURL(string url) {
-			WWW www = new WWW(url);
-			while (!www.isDone)
-				yield return null;
-			Destroy(RawImage.GetComponent<RawImage>().texture);
-			RawImage.GetComponent<RawImage>().texture = www.texture;
-			ScaleImage();
-		}
-
-		public void SetImageFromResource(string path) {
-			RawImage.GetComponent<RawImage>().texture = Resources.Load(path) as Texture2D;
-			ScaleImage();
-		}
-
-		void ScaleImage() {
-			float imageRatio = GetImageWidth() / GetImageHeight();
-			RawImage.GetComponent<AspectRatioFitter>().aspectRatio = imageRatio;
 		}
 
 		void FirstClick() {
@@ -159,7 +111,7 @@ namespace Reader {
 
 		void NextClick() {
 			if (!NextButton.interactable) return;
-			if (_pages.pages.Length - 1 == _currentPage) return;
+			if (_book.pages.Length - 1 == _currentPage) return;
 			_currentPage++;
 			LoadPage();
 			_timeOfLastMouseMovement = Time.fixedTime;
@@ -167,8 +119,8 @@ namespace Reader {
 
 		void LastClick() {
 			if (!LastButton.interactable) return;
-			if (_pages.pages.Length - 1 == _currentPage) return;
-			_currentPage = _pages.pages.Length - 1;
+			if (_book.pages.Length - 1 == _currentPage) return;
+			_currentPage = _book.pages.Length - 1;
 			LoadPage();
 			_timeOfLastMouseMovement = Time.fixedTime;
 		}
@@ -191,56 +143,4 @@ namespace Reader {
 			LastButton.gameObject.SetActive(true);
 		}
 	}
-
-	[Serializable]
-	public class Issue {
-		public string id;
-		public int issue;
-	}
-
-	[Serializable]
-	public class Issues {
-		public List<Issue> issues;
-
-		public bool HasIssue(string id, int issue) {
-			foreach (Issue book in issues) {
-				if (book.id != id || book.issue != issue) continue;
-				return true;
-			}
-			return false;
-		}
-		public void AddIssue(string id, int issue) {
-			if (HasIssue(id, issue)) return;
-			Issue newIssue = new Issue();
-			newIssue.id = id;
-			newIssue.issue = issue;
-			issues.Add(newIssue);
-		}
-		public void RemoveIssue(string id, int issue) {
-			foreach (Issue i in issues) {
-				if (i.id != id || i.issue != issue) continue;
-				issues.Remove(i);
-				break;
-			}
-		}
-	}
-
-	[Serializable]
-	public class Pages {
-		public string id;
-		public string title;
-		public int issue;
-		public string[] pages;
-		public string cover;
-		public string[] preview;
-		public string descriptionTitle1;
-		public string description1;
-		public string descriptionTitle2;
-		public string description2;
-		public string descriptionTitle3;
-		public string description3;
-		public string price;
-		public Issue[] seeAlso;
-	}
-
 }

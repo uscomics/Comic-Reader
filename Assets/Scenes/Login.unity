@@ -965,18 +965,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 800080432}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &800080434 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2071272132207826287, guid: b574fc03a85dc394b90124c8cc4ee241,
-    type: 3}
-  m_PrefabInstance: {fileID: 800080432}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &800080435 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2071272132056580558, guid: b574fc03a85dc394b90124c8cc4ee241,
@@ -1755,7 +1743,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.11764707, g: 0.078431375, b: 0.18039216, a: 1}
+  m_BackGroundColor: {r: 0.02745098, g: 0.23921569, b: 0.42745098, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1832,7 +1820,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Message: {fileID: 1392348002}
   MessageCanvasGroup: {fileID: 1392348003}
-  ImageImage: {fileID: 800080434}
   ImageMessage: {fileID: 800080435}
   ImageMessageCanvasGroup: {fileID: 800080436}
   Lifetime: 5
