@@ -14,7 +14,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AddAccount.unity
     guid: c0d6ec16735df1c4b962c069bfa7a8ea
+  - enabled: 0
+    path: Assets/__DELETED_GUID_Trash/3b16a23dac1c4dd4898202e43d72489b
+    guid: 3b16a23dac1c4dd4898202e43d72489b
+  - enabled: 1
+    path: Assets/Scenes/StoreItem.unity
+    guid: 75259fcffa3579541b9ef2c57d166a4f
   - enabled: 1
     path: Assets/Scenes/Purchased.unity
-    guid: 3b16a23dac1c4dd4898202e43d72489b
+    guid: 897248c36d0a10f4190717cea62c88a1
+  - enabled: 1
+    path: Assets/Scenes/Favorites.unity
+    guid: 1e1640f9e7814fe4bbffe5a22c99e0c0
   m_configObjects: {}

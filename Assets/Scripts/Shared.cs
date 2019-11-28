@@ -1,6 +1,6 @@
 ﻿using Purchased;
 using System.Collections.Generic;
-
+using UnityEngine;
 
 public class Shared
 {
@@ -15,6 +15,14 @@ public class Shared
     public static Dictionary<string, Book> _BOOK_INFO = new Dictionary<string, Book>();
     public static string _CURRENT_BOOK_ID = "";
     public static int _CURRENT_BOOK_ISSUE = 0;
-    public static IssueList _FAVORITES = new IssueList();
+    public static Favorites.FavoritesList _FAVORITES = new Favorites.FavoritesList();
     public static IssueList _CART = new IssueList();
+
+    public static EmptyScript GetEmptyScript() {
+        GameObject g = GameObject.Find("EmptyGameObject");
+        if (null == g) return null;
+        EmptyScript s = g.GetComponent<EmptyScript>();
+        return s;
+    }            
+
 }

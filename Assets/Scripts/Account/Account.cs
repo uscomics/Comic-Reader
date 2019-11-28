@@ -12,6 +12,7 @@ namespace Account {
         public string firstName;
         public string lastName;
         public string group;
+        public string transactionDate;
 
         public delegate void Callback();
 

@@ -51,5 +51,24 @@ public class Book : Issue {
 		}
 		return books;
 	}
+	public static Dictionary<string, Book> GetFavoriteBooksFromServer(string urlBase, Favorites.FavoritesList favorites) {
+		Dictionary<string, Book> books = new Dictionary<string, Book>();
+		foreach (Favorites.Favorite f in favorites.Favorites) {
+			try {
+				string bookKey = f.MakeKey();
+				HttpWebRequest request = (HttpWebRequest) WebRequest.Create(String.Format(urlBase + "{0}/{1}", f.id, f.issue));
+				request.Headers["Authorization"] = Shared._AUTHORIATION;
+
+				HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+				StreamReader reader = new StreamReader(response.GetResponseStream());
+				string jsonResponse = reader.ReadToEnd();
+				Book book = JsonUtility.FromJson<Book>(jsonResponse);
+				books.Add(bookKey, book);
+			} catch (Exception e) {
+				MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+			}
+		}
+		return books;
+	}
 }
 	

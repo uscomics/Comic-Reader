@@ -13,6 +13,13 @@ public class IssueList {
         }
         return false;
     }
+    public Issue GetIssue(string id, int issue) {
+        foreach (Issue book in Issues) {
+            if (book.id != id || book.issue != issue) continue;
+            return book;
+        }
+        return null;
+    }
     public void AddIssue(string id, int issue) {
         if (HasIssue(id, issue)) return;
         Issue newIssue = new Issue();

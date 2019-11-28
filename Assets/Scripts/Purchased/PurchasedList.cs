@@ -9,7 +9,7 @@ namespace Purchased {
         public List<Purchased> Purchased = new List<Purchased>();
         public bool HasPurchase(string id, int issue, string purchased) {
             foreach (Purchased book in Purchased) {
-                if (book.id != id || book.issue != issue || book.purchased != purchased) continue;
+                if (book.id != id || book.issue != issue || book.transactionDate != purchased) continue;
                 return true;
             }
             return false;
@@ -19,7 +19,7 @@ namespace Purchased {
             Purchased newIssue = new Purchased();
             newIssue.id = id;
             newIssue.issue = issue;
-            newIssue.purchased = purchased;
+            newIssue.transactionDate = purchased;
             Purchased.Add(newIssue);
         }
         public void RemovePurchase(string id, int issue) {
@@ -46,7 +46,7 @@ namespace Purchased {
                 Purchased key = Purchased[j];
 
                 int i = j - 1;
-                for (; i >= 0 && Purchased[i].purchased.CompareTo( key.purchased ) > 0; i--) {
+                for (; i >= 0 && Purchased[i].transactionDate.CompareTo( key.transactionDate ) > 0; i--) {
                     Purchased[i + 1] = Purchased[i];
                 }
                 Purchased[i + 1] = key;

@@ -3,8 +3,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Purchased {
-    public class PurchasedController : MonoBehaviour, IPointerClickHandler {
+namespace Favorites {
+    public class FavoriteController : MonoBehaviour, IPointerClickHandler {
         public RawImage Cover;
         public Text Title;
         public string Id;
@@ -14,7 +14,7 @@ namespace Purchased {
         {
             Shared._CURRENT_BOOK_ID = Id;
             Shared._CURRENT_BOOK_ISSUE = Issue;
-            SceneManager.LoadScene("Reader", LoadSceneMode.Single);
+            SceneManager.LoadScene("StoreItem", LoadSceneMode.Single);
         }
     }
 }

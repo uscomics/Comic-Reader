@@ -16,6 +16,7 @@ public class Messages {
     public static readonly int ERROR_INVALID_CREDENTIALS = 10;
     public static readonly int SUCCESS_LOGIN = 11;
     public static readonly int ERROR_UNABLE_TO_OBTAIN_BOOK_LIST = 12;
+    public static readonly int ERROR_NO_FAVORITES = 13;
 
     private static readonly string[] messages_en_US = {
         "A user name is required.",
@@ -30,6 +31,7 @@ public class Messages {
         "Invalid credentials.",
         "Login successful.",
         "Unable to obtain the list of your books from the server.",
+        "You don't have any favorites.",
     };
 
     public static string GetMessage(Language inLanguage, int inMessageId) {
@@ -42,7 +44,7 @@ public class Messages {
 }
 
 public class MessageManager : MonoBehaviour {
-    public enum Sound {UseErrorSound, UseSuccessSound};
+    public enum Sound {UseErrorSound, UseSuccessSound,NoSound};
     public static MessageManager INSTANCE;
     
     public TextMeshProUGUI Message;
