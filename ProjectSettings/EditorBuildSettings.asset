@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Favorites.unity
     guid: 1e1640f9e7814fe4bbffe5a22c99e0c0
+  - enabled: 1
+    path: Assets/Scenes/Cart.unity
+    guid: 3ae94b718d841d340bdc9f5fdbfc35d5
   m_configObjects: {}

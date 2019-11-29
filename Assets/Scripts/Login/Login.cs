@@ -62,12 +62,14 @@ public class Login : MonoBehaviour {
 			Shared._USERNAME = UserName.text;
 			Shared._PASSWORD = Password.text;
 			Shared._FAVORITES = Favorites.FavoritesList.GetFromServer(String.Format(Shared._URL_BASE + "favorites/{0}", Shared._USERNAME));
-			if (null != Shared._FAVORITES) {
+			if (null == Shared._FAVORITES)  Shared._FAVORITES = new Favorites.FavoritesList();
+			Shared._CART = Cart.CartList.GetFromServer(String.Format(Shared._URL_BASE + "cart/{0}", Shared._USERNAME));
+			if (null != Shared._CART) {
 				MessageManager.INSTANCE.PlaySuccessSound();
 				yield return new WaitForSeconds(2);
 				SceneManager.LoadScene("Purchased", LoadSceneMode.Single);
 			} else {
-				Shared._FAVORITES = new Favorites.FavoritesList();
+				Shared._CART = new Cart.CartList();
 			}
 		}
 	}

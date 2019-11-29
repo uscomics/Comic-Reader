@@ -16,8 +16,13 @@ public class Shared
     public static string _CURRENT_BOOK_ID = "";
     public static int _CURRENT_BOOK_ISSUE = 0;
     public static Favorites.FavoritesList _FAVORITES = new Favorites.FavoritesList();
-    public static IssueList _CART = new IssueList();
+    public static Cart.CartList _CART = new Cart.CartList();
 
+    public static void CleanupCart() {
+        foreach (Cart.Cart c in _CART.Cart) {
+            if (c.MarkedForRemoval)  _CART.RemoveCart(c.id, c.issue, _URL_BASE + "user/cart/delete/data");
+        }
+    }
     public static EmptyScript GetEmptyScript() {
         GameObject g = GameObject.Find("EmptyGameObject");
         if (null == g) return null;

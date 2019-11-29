@@ -12,6 +12,7 @@ namespace Purchased {
         void Start() {
             if (String.IsNullOrEmpty(Shared._USERNAME)) Shared._USERNAME = "dave";
             SortOrder.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { GetFromServer(_URL_BASE + Shared._USERNAME); });
+            Shared.CleanupCart();
             GetFromServer(_URL_BASE + Shared._USERNAME);
         }
     
@@ -21,7 +22,7 @@ namespace Purchased {
             if (null == Shared._PURCHASED || 0 == Shared._PURCHASED.Purchased.Count) return;
 
             // 2. Get information for each book.
-            Shared._BOOK_INFO = Book.GetPurchasedBooksFromServer(_URL_BASE, Shared._PURCHASED);
+            Shared._BOOK_INFO = Book.GetBooksFromServer(_URL_BASE, Shared._PURCHASED.Purchased);
             
             // 3. Remove old display items.
             while(0 < ContentPanel.transform.childCount) {

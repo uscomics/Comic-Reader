@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -39,7 +37,9 @@ namespace StoreItem {
         void Start() {
             FavoriteButton.GetComponent<Button>().onClick.AddListener(ToggleFavorite); 
             FavoriteToolbarButton.GetComponent<Button>().onClick.AddListener(ViewFavorites); 
-            AddToCartButton.GetComponent<Button>().onClick.AddListener(() => { StartCoroutine(ToggleAddToCart()); }); 
+            AddToCartButton.GetComponent<Button>().onClick.AddListener(ToggleAddToCart); 
+            AddToCartToolbarButton.GetComponent<Button>().onClick.AddListener(ViewCart); 
+            Shared.CleanupCart();
             LoadPage();
         }
         public void LoadPage() {
@@ -91,8 +91,8 @@ namespace StoreItem {
         public void SetButtons() {
             SetButton(FavoriteButton, (null != Shared._FAVORITES && Shared._FAVORITES.HasFavorite( _book.id, _book.issue )));
             SetButton(FavoriteToolbarButton, (null != Shared._FAVORITES && 0 < Shared._FAVORITES.Favorites.Count));
-            SetButton(AddToCartButton, (null != Shared._CART && Shared._CART.HasIssue( _book.id, _book.issue )));
-            SetButton(AddToCartToolbarButton, (null != Shared._CART && 0 < Shared._CART.Issues.Count));
+            SetButton(AddToCartButton, (null != Shared._CART && Shared._CART.HasCart( _book.id, _book.issue )));
+            SetButton(AddToCartToolbarButton, (null != Shared._CART && 0 < Shared._CART.Cart.Count));
         }
         public void SetButton(Button button, bool check) {
             ColorBlock colors = button.colors;
@@ -103,26 +103,16 @@ namespace StoreItem {
         public void ToggleFavorite() {
             Shared._FAVORITES?.ToggleFavorite(_book.id,  _book.issue, Shared._URL_BASE + "user/favorites/add/data", Shared._URL_BASE + "user/favorites/delete/data", SetButtons, SetButtons);
         }
-
         public void ViewFavorites() {
             if (0 == Shared._FAVORITES.Favorites.Count) MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NO_FAVORITES, MessageManager.Sound.NoSound);
             else SceneManager.LoadScene("Favorites", LoadSceneMode.Single);
         }
-        public IEnumerator ToggleAddToCart() {
-            WWWForm form = new WWWForm();
-            UnityWebRequest www;
-            form.AddField("username", Shared._USERNAME);
-            form.AddField("id", _book.id);
-            form.AddField("issue", _book.issue);
-            if (Shared._CART.HasIssue(_book.id, _book.issue)) {
-                Shared._CART.RemoveIssue(_book.id, _book.issue);
-                www = UnityWebRequest.Post(Shared._URL_BASE + "user/cart/delete/data", form);
-            } else {
-                Shared._CART.AddIssue(_book.id, _book.issue);
-                www = UnityWebRequest.Post(Shared._URL_BASE + "user/cart/add/data", form);
-            }
-            SetButtons();
-            yield return www.SendWebRequest();
+        public void ToggleAddToCart() {
+            Shared._CART?.ToggleCart(_book.id,  _book.issue, Shared._URL_BASE + "user/cart/add/data", Shared._URL_BASE + "user/cart/delete/data", SetButtons, SetButtons);
+        }
+        public void ViewCart() {
+            if (0 == Shared._CART.Cart.Count) MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NO_FAVORITES, MessageManager.Sound.NoSound);
+            else SceneManager.LoadScene("Cart", LoadSceneMode.Single);
         }
     }
 }

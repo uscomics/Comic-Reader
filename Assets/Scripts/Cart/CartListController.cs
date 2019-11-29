@@ -2,24 +2,23 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Favorites {
-    public class FavoritesListController : MonoBehaviour {
+namespace Cart {
+    public class CartListController : MonoBehaviour {
         public GameObject ContentPanel;
-        public GameObject FavoritePrefab;
+        public GameObject CartItemPrefab;
         private static string _URL_BASE = Shared._URL_BASE + "comics/";
 
         void Start() {
             if (String.IsNullOrEmpty(Shared._USERNAME)) {
                 Shared._USERNAME = "dave";
-                Shared._FAVORITES = FavoritesList.GetFromServer(String.Format(Shared._URL_BASE + "favorites/{0}", Shared._USERNAME));
+                Shared._CART = CartList.GetFromServer(String.Format(Shared._URL_BASE + "cart/{0}", Shared._USERNAME));
             }
-            Shared.CleanupCart();
-            LoadFavoritesFromURL(_URL_BASE + Shared._USERNAME);
+            LoadCartFromURL(_URL_BASE + Shared._USERNAME);
         }
     
-        public void LoadFavoritesFromURL(string url) {
+        public void LoadCartFromURL(string url) {            
             // 1. Get information for each book.
-            Shared._BOOK_INFO = Book.GetBooksFromServer(_URL_BASE, Shared._FAVORITES.Favorites);
+            Shared._BOOK_INFO = Book.GetBooksFromServer(_URL_BASE, Shared._CART.Cart);
             
             // 2. Remove old display items.
             while(0 < ContentPanel.transform.childCount) {
@@ -29,20 +28,21 @@ namespace Favorites {
             }
             
             // 3. Sort books.
-            Shared._FAVORITES.SortByKey();
+            Shared._CART.SortByKey();
 
             // 4. Show books.
-            foreach (Favorite fav in Shared._FAVORITES.Favorites) {
-                string bookKey = fav.MakeKey();
+            foreach (Cart cart in Shared._CART.Cart) {
+                string bookKey = cart.MakeKey();
                 if (!Shared._BOOK_INFO.ContainsKey(bookKey)) { Debug.Log("Not found: " + bookKey); continue;}
                 Book book = Shared._BOOK_INFO[bookKey];
                 ImageHelper imageHelper = new ImageHelper();
 
-                GameObject newCover = Instantiate(FavoritePrefab) as GameObject;
-                FavoriteController controller = newCover.GetComponent<FavoriteController>();
+                GameObject newCover = Instantiate(CartItemPrefab) as GameObject;
+                CartController controller = newCover.GetComponent<CartController>();
                 controller.Title.text = book.title+ " #" + book.issue;
                 controller.Id = book.id;
                 controller.Issue = book.issue;
+                controller.Price = book.price;
                 newCover.transform.SetParent(ContentPanel.transform, false);
                 newCover.transform.localScale = Vector3.one;
             

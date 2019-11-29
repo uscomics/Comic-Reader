@@ -25,6 +25,7 @@ namespace Reader {
 			if (String.IsNullOrEmpty(Shared._USERNAME)) Shared._USERNAME = "dave";
 			if (String.IsNullOrEmpty(Shared._CURRENT_BOOK_ID)) Shared._CURRENT_BOOK_ID = "gold_venus";
 			if (0 == Shared._CURRENT_BOOK_ISSUE) Shared._CURRENT_BOOK_ISSUE = 1;
+			Shared.CleanupCart();
 			GetManifest(Shared._CURRENT_BOOK_ID, Shared._CURRENT_BOOK_ISSUE);
 			LoadPage();
 			FirstButton.GetComponent<Button>().onClick.AddListener(() => { FirstClick(); });

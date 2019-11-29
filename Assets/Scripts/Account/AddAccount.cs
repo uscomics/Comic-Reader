@@ -19,6 +19,7 @@ namespace Account {
         void Start() {
             CreateAccountButton.GetComponent<Button>().onClick.AddListener(() => { SendAccount(Shared._URL_BASE + "account/add"); }); 
             LoginButton.GetComponent<Button>().onClick.AddListener(() => { GoToLogin(); }); 
+            Shared.CleanupCart();
         }
 
         void Update () {
