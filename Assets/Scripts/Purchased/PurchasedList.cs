@@ -29,7 +29,15 @@ namespace Purchased {
                 break;
             }
         }
-        public string ToJSON() { return  JsonUtility.ToJson(Purchased.ToArray()); }
+        public string ToJSON() { 
+            string json = "[ ";
+            for (int i = 0; i < Purchased.Count; i++) {
+                if (0 < i) json += ", ";
+                json += JsonUtility.ToJson(Purchased[i]);
+            }
+            json += " ]";
+            return json;
+        }
         public void FromJSON(string json) {
             Purchased[] objects = JsonHelper.getJsonArray<Purchased> (json);
             Purchased = new List<Purchased>(objects);

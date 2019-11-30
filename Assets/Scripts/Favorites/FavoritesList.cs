@@ -5,7 +5,6 @@ using System.Net;
 using UnityEngine;
 
 namespace Favorites {
-    [Serializable]
     public class FavoritesList {
         public List<Favorite> Favorites = new List<Favorite>();
 
@@ -44,7 +43,13 @@ namespace Favorites {
             else AddFavorite(id, issue, addURL, errorCallback, successCallback);
         }
         public string ToJSON() {
-            return JsonUtility.ToJson(Favorites.ToArray());
+            string json = "[ ";
+            for (int i = 0; i < Favorites.Count; i++) {
+                if (0 < i) json += ", ";
+                json += JsonUtility.ToJson(Favorites[i]);
+            }
+            json += " ]";
+            return json;
         }
         public void FromJSON(string json) {
             Favorite[] objects = JsonHelper.getJsonArray<Favorite>(json);

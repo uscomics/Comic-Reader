@@ -17,6 +17,7 @@ public class Messages {
     public static readonly int SUCCESS_LOGIN = 11;
     public static readonly int ERROR_UNABLE_TO_OBTAIN_BOOK_LIST = 12;
     public static readonly int ERROR_NO_FAVORITES = 13;
+    public static readonly int SUCCESS_PURCHASE = 14;
 
     private static readonly string[] messages_en_US = {
         "A user name is required.",
@@ -32,6 +33,7 @@ public class Messages {
         "Login successful.",
         "Unable to obtain the list of your books from the server.",
         "You don't have any favorites.",
+        "Purchase successful."
     };
 
     public static string GetMessage(Language inLanguage, int inMessageId) {

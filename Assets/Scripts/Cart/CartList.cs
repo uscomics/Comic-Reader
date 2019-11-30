@@ -1,13 +1,14 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Cart {
-    [Serializable]
     public class CartList {
         public List<Cart> Cart = new List<Cart>();
+        public delegate void Callback();
 
         public bool HasCart(string id, int issue) {
             foreach (Cart fav in Cart) {
@@ -46,14 +47,21 @@ namespace Cart {
         public string GetTotalPrice() {
             float total = 0.0f;
             foreach (Cart f in Cart) {
+                if (f.MarkedForRemoval) continue;
                 Book book = Shared._BOOK_INFO[f.MakeKey()];
                 if (null == book) continue;
-                if (!f.MarkedForRemoval) total += float.Parse(book.price);
+                total += float.Parse(book.price);
             }
             return total.ToString("0.00");
         }
         public string ToJSON() {
-            return JsonUtility.ToJson(Cart.ToArray());
+            string json = "[ ";
+            for (int i = 0; i < Cart.Count; i++) {
+                if (0 < i) json += ", ";
+                json += JsonUtility.ToJson(Cart[i]);
+            }
+            json += " ]";
+            return json;
         }
         public void FromJSON(string json) {
             Cart[] objects = JsonHelper.getJsonArray<Cart>(json);
@@ -78,6 +86,26 @@ namespace Cart {
                 return null;
             }
         }
-
+        public IEnumerator Purchase(string url, Callback errorCallback = null, Callback successCallback = null) {  
+            WWWForm form = new WWWForm();
+            form.AddField("username", Shared._USERNAME);
+            form.AddField("books", Shared._CART.ToJSON());
+            UnityWebRequest www = UnityWebRequest.Post(url, form);
+            yield return www.SendWebRequest();
+    
+            if (www.isNetworkError) {
+                MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+                errorCallback?.Invoke();
+                yield break; // exit
+            } else if (www.isHttpError) {
+                if (null != www.downloadHandler.text) MessageManager.INSTANCE.ShowImageMessage(www.downloadHandler.text);
+                else MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+                errorCallback?.Invoke();
+                yield break; // exit
+            }
+            MessageManager.INSTANCE.ShowImageMessage(Messages.SUCCESS_PURCHASE, MessageManager.Sound.UseSuccessSound);
+            yield return new WaitForSeconds(2);
+            successCallback?.Invoke();
+        }
     }
 }
