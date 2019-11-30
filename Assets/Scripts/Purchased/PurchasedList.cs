@@ -7,6 +7,20 @@ using UnityEngine;
 namespace Purchased {
     public class PurchasedList {
         public List<Purchased> Purchased = new List<Purchased>();
+        public Purchased GetPurchase(string id, int issue) {
+            foreach (Purchased book in Purchased) {
+                if (book.id != id || book.issue != issue ) continue;
+                return book;
+            }
+            return null;
+        }
+        public bool HasPurchase(string id, int issue) {
+            foreach (Purchased book in Purchased) {
+                if (book.id != id || book.issue != issue ) continue;
+                return true;
+            }
+            return false;
+        }
         public bool HasPurchase(string id, int issue, string purchased) {
             foreach (Purchased book in Purchased) {
                 if (book.id != id || book.issue != issue || book.transactionDate != purchased) continue;

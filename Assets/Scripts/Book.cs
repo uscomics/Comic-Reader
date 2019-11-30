@@ -33,8 +33,8 @@ public class Book : Issue {
 			return null;
 		}
 	}
-	public static Dictionary<string, Book> GetBooksFromServer<T>(string urlBase, List<T> list) {
-		Dictionary<string, Book> books = new Dictionary<string, Book>();
+	public static SortedDictionary<string, Book> GetBooksFromServer<T>(string urlBase, List<T> list) {
+		SortedDictionary<string, Book> books = new SortedDictionary<string, Book>();
 		foreach (Object i in list) {
 			if (!(i is Issue)) continue;
 			Issue issue = (Issue) i;

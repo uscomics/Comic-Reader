@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Purchased {
@@ -7,11 +8,13 @@ namespace Purchased {
         public GameObject ContentPanel;
         public GameObject SortOrder;
         public GameObject ListItemPrefab;
+        public Button HomeToolbarButton;
         private static string _URL_BASE = Shared._URL_BASE + "comics/";
 
         void Start() {
             if (String.IsNullOrEmpty(Shared._USERNAME)) Shared._USERNAME = "dave";
             SortOrder.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { GetFromServer(_URL_BASE + Shared._USERNAME); });
+            HomeToolbarButton.GetComponent<Button>().onClick.AddListener(Home); 
             Shared.CleanupCart();
             GetFromServer(_URL_BASE + Shared._USERNAME);
         }
@@ -55,6 +58,9 @@ namespace Purchased {
                 RawImage image = controller.Cover.GetComponent<RawImage>();
                 StartCoroutine(imageHelper.SetImageFromURL(image, coverURL));
             }
+        }
+        public void Home() {
+            SceneManager.LoadScene("StoreFront", LoadSceneMode.Single);
         }
     }
 }

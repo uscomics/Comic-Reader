@@ -30,6 +30,7 @@ namespace Cart {
             StartCoroutine(Shared._CART.Purchase(Shared._URL_BASE + "user/checkout/data", null, LoadPurchaseScreen));
         }
         public void LoadPurchaseScreen() {
+            Shared._CART.RemoveAllCart(Shared._URL_BASE + "user/cart/delete/data");
             SceneManager.LoadScene("Purchased", LoadSceneMode.Single);
         }
     }

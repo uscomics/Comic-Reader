@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace StoreItem {
     public class StoreItem : MonoBehaviour {
@@ -26,6 +26,7 @@ namespace StoreItem {
         public Button FavoriteToolbarButton;
         public Button AddToCartButton;
         public Button AddToCartToolbarButton;
+        public Button HomeToolbarButton;
 
         private static string _URL_BASE = Shared._URL_BASE + "comics/";
         private Book _book;
@@ -39,6 +40,7 @@ namespace StoreItem {
             FavoriteToolbarButton.GetComponent<Button>().onClick.AddListener(ViewFavorites); 
             AddToCartButton.GetComponent<Button>().onClick.AddListener(ToggleAddToCart); 
             AddToCartToolbarButton.GetComponent<Button>().onClick.AddListener(ViewCart); 
+            HomeToolbarButton.GetComponent<Button>().onClick.AddListener(Home); 
             Shared.CleanupCart();
             LoadPage();
         }
@@ -54,6 +56,7 @@ namespace StoreItem {
             LoadImages();
             LoadText();
             SetButtons();
+            CheckPurchase();
         }
         public Book GetManifest(string id, int issue) {
             return Book.GetFromServer(String.Format(_URL_BASE + "{0}/{1}", id, issue));
@@ -111,8 +114,17 @@ namespace StoreItem {
             Shared._CART?.ToggleCart(_book.id,  _book.issue, Shared._URL_BASE + "user/cart/add/data", Shared._URL_BASE + "user/cart/delete/data", SetButtons, SetButtons);
         }
         public void ViewCart() {
-            if (0 == Shared._CART.Cart.Count) MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NO_FAVORITES, MessageManager.Sound.NoSound);
+            if (0 == Shared._CART.Cart.Count) MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NO_CART, MessageManager.Sound.NoSound);
             else SceneManager.LoadScene("Cart", LoadSceneMode.Single);
+        }
+        public void Home() {
+            SceneManager.LoadScene("StoreFront", LoadSceneMode.Single);
+        }
+        public void CheckPurchase() {
+            if (Shared._PURCHASED.HasPurchase(Shared._CURRENT_BOOK_ID, Shared._CURRENT_BOOK_ISSUE)) {
+                string message = String.Format(Messages.GetMessage(Messages.Language.en_US, Messages.MESSAGE_ALREADY_PURCHASED), Shared._PURCHASED.GetPurchase(Shared._CURRENT_BOOK_ID, Shared._CURRENT_BOOK_ISSUE).transactionDate);
+                MessageManager.INSTANCE.ShowImageMessage(message, MessageManager.Sound.NoSound);
+            }
         }
     }
 }

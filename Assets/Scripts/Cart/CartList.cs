@@ -40,6 +40,13 @@ namespace Cart {
                 break;
             }
         }
+        public void RemoveAllCart(string removeURL, Cart.Callback errorCallback = null, Cart.Callback successCallback = null) {
+            for (int i = Cart.Count -1; 0 <= i; i--) {
+                Cart f = Cart[i];
+                Cart.Remove(f);
+                Shared.GetEmptyScript()?.StartCoroutine(f.UpdateServer(removeURL, errorCallback, successCallback));
+            }
+        }
         public void ToggleCart(string id, int issue, string addURL, string removeURL, Cart.Callback errorCallback = null, Cart.Callback successCallback = null) {
             if (HasCart(id, issue)) RemoveCart(id, issue, removeURL, errorCallback, successCallback);
             else AddCart(id, issue, addURL, errorCallback, successCallback);

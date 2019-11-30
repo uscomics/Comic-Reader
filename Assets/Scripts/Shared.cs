@@ -12,7 +12,7 @@ public class Shared
     public static string _LASTNAME = "";
     public static string _EMAIL = "";
     public static PurchasedList _PURCHASED = new PurchasedList();
-    public static Dictionary<string, Book> _BOOK_INFO = new Dictionary<string, Book>();
+    public static SortedDictionary<string, Book> _BOOK_INFO = new SortedDictionary<string, Book>();
     public static string _CURRENT_BOOK_ID = "";
     public static int _CURRENT_BOOK_ISSUE = 0;
     public static Favorites.FavoritesList _FAVORITES = new Favorites.FavoritesList();
