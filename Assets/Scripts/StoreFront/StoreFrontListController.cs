@@ -10,7 +10,6 @@ namespace StoreFront {
         private static string _URL_BASE = Shared._URL_BASE + "comics/";
 
         void Start() {
-            if (String.IsNullOrEmpty(Shared._USERNAME)) Shared._USERNAME = "dave";
             Shared.CleanupCart();
             GetFromServer(_URL_BASE + Shared._USERNAME);
         }
