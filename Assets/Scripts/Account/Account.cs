@@ -31,6 +31,7 @@ namespace Account {
             if (!Regex.IsMatch(username, "[a-zA-Z0-9-_]")) return Messages.ERROR_INVALID_USERNAME;
             if (0 == password.Length) return Messages.ERROR_PASSWORD_REQUIRED;
             if (5 > password.Length) return Messages.ERROR_PASSWORD_LENGTH;
+            if (0 == email.Length) return Messages.ERROR_EMAIL_REQUIRED;
             if (0 < email.Length && 4 > email.Length) return Messages.ERROR_INVALID_EMAIL;
             if (0 < email.Length && 0 == email.IndexOf('@')) return Messages.ERROR_INVALID_EMAIL;
             return 0;

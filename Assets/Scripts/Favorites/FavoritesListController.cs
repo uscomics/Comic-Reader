@@ -6,7 +6,8 @@ namespace Favorites {
     public class FavoritesListController : MonoBehaviour {
         public GameObject ContentPanel;
         public GameObject FavoritePrefab;
-        private static string _URL_BASE = Shared._URL_BASE + "comics/";
+        public Dropdown SortOrder;
+        public static string _URL_BASE = Shared._URL_BASE + "comics/";
 
         void Start() {
             if (String.IsNullOrEmpty(Shared._USERNAME)) {
@@ -14,10 +15,11 @@ namespace Favorites {
                 Shared._FAVORITES = FavoritesList.GetFromServer(String.Format(Shared._URL_BASE + "favorites/{0}", Shared._USERNAME));
             }
             Shared.CleanupCart();
-            LoadFavoritesFromURL(_URL_BASE + Shared._USERNAME);
+            SortOrder.onValueChanged.AddListener(delegate { GetFromServer(_URL_BASE + Shared._USERNAME); });
+            GetFromServer(_URL_BASE + Shared._USERNAME);
         }
     
-        public void LoadFavoritesFromURL(string url) {
+        public void GetFromServer(string url) {
             // 1. Get information for each book.
             Shared._BOOK_INFO = Book.GetBooksFromServer(_URL_BASE, Shared._FAVORITES.Favorites);
             
@@ -29,7 +31,9 @@ namespace Favorites {
             }
             
             // 3. Sort books.
+            Dropdown sortPreference = SortOrder.GetComponent<Dropdown>();
             Shared._FAVORITES.SortByKey();
+            if (1 == sortPreference.value) { Shared._FAVORITES.SortByDate(); }
 
             // 4. Show books.
             foreach (Favorite fav in Shared._FAVORITES.Favorites) {

@@ -5,14 +5,17 @@ using UnityEngine.UI;
 
 public class AccountToolbarController : MonoBehaviour {
     public Button LoginButton;
+    public Button SignupButton;
     public Button LogoutButton;
     public Button AccountButton;
+    public Button BooksButton;
 
     void Start() {
-        Debug.Log("AccountToolbarController.Start");
         LoginButton.GetComponent<Button>().onClick.AddListener(DoLogin); 
+        SignupButton.GetComponent<Button>().onClick.AddListener(DoSignup); 
         LogoutButton.GetComponent<Button>().onClick.AddListener(DoLogout); 
         AccountButton.GetComponent<Button>().onClick.AddListener(DoAccount); 
+        BooksButton.GetComponent<Button>().onClick.AddListener(DoBooks); 
         Shared.CleanupCart();
     }
     void Update() {
@@ -21,20 +24,22 @@ public class AccountToolbarController : MonoBehaviour {
     public void SetButtons() {
         if (null == Shared._USERNAME) {
             LoginButton.gameObject.SetActive(true);
+            SignupButton.gameObject.SetActive(true);
             LogoutButton.gameObject.SetActive(false);
             AccountButton.gameObject.SetActive(false);
+            BooksButton.gameObject.SetActive(false);
         } else {
             LoginButton.gameObject.SetActive(false);
+            SignupButton.gameObject.SetActive(false);
             LogoutButton.gameObject.SetActive(true);
             AccountButton.gameObject.SetActive(true);
+            BooksButton.gameObject.SetActive(true);
         }
     }
     public void DoLogin() {
-        Debug.Log("Login");
         SceneManager.LoadScene("Login", LoadSceneMode.Single);
     }
     public void DoLogout() {
-        Debug.Log("Logout");
         Shared._USERNAME = null;
         Shared._AUTHORIATION = null;
         Shared._PASSWORD = null;
@@ -47,5 +52,12 @@ public class AccountToolbarController : MonoBehaviour {
         SceneManager.LoadScene("Storefront", LoadSceneMode.Single);
     }
     public void DoAccount() {
+        SceneManager.LoadScene("UpdateAccount", LoadSceneMode.Single);
+    }
+    public void DoBooks() {
+        SceneManager.LoadScene("Purchased", LoadSceneMode.Single);
+    }
+    public void DoSignup() {
+        SceneManager.LoadScene("AddAccount", LoadSceneMode.Single);
     }
 }

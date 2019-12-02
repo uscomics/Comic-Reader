@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 512133554}
   - component: {fileID: 512133553}
   m_Layer: 5
-  m_Name: Home Button
+  m_Name: Books Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

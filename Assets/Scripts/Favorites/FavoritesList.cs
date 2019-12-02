@@ -59,6 +59,21 @@ namespace Favorites {
             IssueCompare issueCompare = new IssueCompare();
             Favorites.Sort(issueCompare);
         }
+        public void SortByDate() {
+            // This is a stable sort.
+            // http://www.csharp411.com/c-stable-sort/
+            int count = Shared._FAVORITES.Favorites.Count;
+            for (int j = 1; j < count; j++) {
+                Favorite key = Favorites[j];
+
+                int i = j - 1;
+                for (; i >= 0 && Favorites[i].transactionDate.CompareTo( key.transactionDate ) > 0; i--) {
+                    Favorites[i + 1] = Favorites[i];
+                }
+                Favorites[i + 1] = key;
+            }
+            Favorites.Reverse( );
+        }
         public static FavoritesList GetFromServer(string url) {
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
             request.Headers["Authorization"] = Shared._AUTHORIATION;

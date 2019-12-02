@@ -58,11 +58,22 @@ public class Login : MonoBehaviour {
 			MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_INVALID_CREDENTIALS);
 		}
 		else {
+			Debug.Log(www.downloadHandler.text);
 			Shared._AUTHORIATION = headers["Authorization"];
 			Shared._USERNAME = UserName.text;
 			Shared._PASSWORD = Password.text;
+
+			User user = User.GetFromServer(Shared._URL_BASE + "user/" + Shared._USERNAME + "/info");
+
+			if (null == user) {
+				MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+				yield break; // exit
+			} 
+			Shared._EMAIL = user.email;
+			Shared._FIRSTNAME = user.firstName;
+			Shared._LASTNAME = user.lastName;
 			Shared._FAVORITES = Favorites.FavoritesList.GetFromServer(String.Format(Shared._URL_BASE + "favorites/{0}", Shared._USERNAME));
-			if (null == Shared._FAVORITES)  Shared._FAVORITES = new Favorites.FavoritesList();
+			if (null == Shared._FAVORITES) Shared._FAVORITES = new Favorites.FavoritesList();
 			Shared._CART = Cart.CartList.GetFromServer(String.Format(Shared._URL_BASE + "cart/{0}", Shared._USERNAME));
 			if (null != Shared._CART) {
 				MessageManager.INSTANCE.PlaySuccessSound();

@@ -10,16 +10,17 @@ public class Messages {
     public static readonly int ERROR_PASSWORD_REQUIRED = 4;
     public static readonly int ERROR_PASSWORD_LENGTH = 5;
     public static readonly int ERROR_PASSWORDS_DO_NOT_MATCH = 6;
-    public static readonly int ERROR_INVALID_EMAIL = 7;
-    public static readonly int SUCCESS_ACCOUNT_ADDED = 8;
-    public static readonly int ERROR_NETWORK = 9;
-    public static readonly int ERROR_INVALID_CREDENTIALS = 10;
-    public static readonly int SUCCESS_LOGIN = 11;
-    public static readonly int ERROR_UNABLE_TO_OBTAIN_BOOK_LIST = 12;
-    public static readonly int ERROR_NO_FAVORITES = 13;
-    public static readonly int ERROR_NO_CART = 14;
-    public static readonly int SUCCESS_PURCHASE = 15;
-    public static readonly int MESSAGE_ALREADY_PURCHASED = 16;
+    public static readonly int ERROR_EMAIL_REQUIRED = 7;
+    public static readonly int ERROR_INVALID_EMAIL = 8;
+    public static readonly int SUCCESS_ACCOUNT_ADDED = 9;
+    public static readonly int ERROR_NETWORK = 10;
+    public static readonly int ERROR_INVALID_CREDENTIALS = 11;
+    public static readonly int SUCCESS_LOGIN = 12;
+    public static readonly int ERROR_UNABLE_TO_OBTAIN_BOOK_LIST = 13;
+    public static readonly int ERROR_NO_FAVORITES = 14;
+    public static readonly int ERROR_NO_CART = 15;
+    public static readonly int SUCCESS_PURCHASE = 16;
+    public static readonly int MESSAGE_ALREADY_PURCHASED = 17;
 
     private static readonly string[] messages_en_US = {
         "A user name is required.",
@@ -28,6 +29,7 @@ public class Messages {
         "A password is required.",
         "Invalid password. Must be at least 5 characters long.",
         "Passwords do not match.",
+        "Email required.",
         "Invalid email.",
         "Account created successfully. Welcome to U.S. Comics.",
         "A network error occured.",

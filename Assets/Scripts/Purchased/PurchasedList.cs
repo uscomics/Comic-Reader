@@ -60,7 +60,7 @@ namespace Purchased {
             IssueCompare purchasedCompare = new IssueCompare();
             Purchased.Sort(purchasedCompare); 
         }
-        public void SortByDatePurchased() {
+        public void SortByDate() {
             // This is a stable sort.
             // http://www.csharp411.com/c-stable-sort/
             int count = Shared._PURCHASED.Purchased.Count;

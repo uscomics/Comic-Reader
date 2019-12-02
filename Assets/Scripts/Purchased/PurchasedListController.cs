@@ -4,15 +4,15 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Purchased {
-    public class PurchasedListController : MonoBehaviour {
+    public class PurchasedListController : MonoBehaviour {    
         public GameObject ContentPanel;
-        public GameObject SortOrder;
+        public Dropdown SortOrder;
         public GameObject ListItemPrefab;
         private static string _URL_BASE = Shared._URL_BASE + "comics/";
 
         void Start() {
             if (String.IsNullOrEmpty(Shared._USERNAME)) Shared._USERNAME = "dave";
-            SortOrder.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { GetFromServer(_URL_BASE + Shared._USERNAME); });
+            SortOrder.onValueChanged.AddListener(delegate { GetFromServer(_URL_BASE + Shared._USERNAME); });
             Shared.CleanupCart();
             GetFromServer(_URL_BASE + Shared._USERNAME);
         }
@@ -35,7 +35,7 @@ namespace Purchased {
             // 4. Sort books.
             Dropdown sortPreference = SortOrder.GetComponent<Dropdown>();
             Shared._PURCHASED.SortByKey();
-            if (1 == sortPreference.value) { Shared._PURCHASED.SortByDatePurchased(); }
+            if (1 == sortPreference.value) { Shared._PURCHASED.SortByDate(); }
 
             // 5. Show books.
             foreach (Purchased purchased in Shared._PURCHASED.Purchased) {
