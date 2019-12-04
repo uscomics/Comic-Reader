@@ -38,6 +38,7 @@ namespace Account {
         }
 
         public IEnumerator PostToServer(string url, string inDestiantion, Callback errorCallback = null, Callback successCallback = null) {
+            Debug.Log(url);
             int errorCode = Validate();
             if (0 != errorCode) {
                 MessageManager.INSTANCE.ShowImageMessage(errorCode);
@@ -53,7 +54,7 @@ namespace Account {
             form.AddField("lastName", lastName);
             form.AddField("group1", group);
             form.AddField("destination", inDestiantion);
-            UnityWebRequest www = UnityWebRequest.Post(Shared._URL_BASE + "user/add/data", form);
+            UnityWebRequest www = UnityWebRequest.Post(url, form);
             yield return www.SendWebRequest();
 
             if (www.isNetworkError) {
@@ -61,6 +62,7 @@ namespace Account {
                 errorCallback?.Invoke();
                 yield break; // exit
             } else if (www.isHttpError) {
+                Debug.Log(www.error);
                 if (null != www.downloadHandler.text) MessageManager.INSTANCE.ShowImageMessage(www.downloadHandler.text);
                 else MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
                 errorCallback?.Invoke();

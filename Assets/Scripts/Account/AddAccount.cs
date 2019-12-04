@@ -17,7 +17,7 @@ namespace Account {
         private IEnumerator _coroutine;
 
         void Start() {
-            CreateAccountButton.GetComponent<Button>().onClick.AddListener(() => { SendAccount(Shared._URL_BASE + "account/add"); }); 
+            CreateAccountButton.GetComponent<Button>().onClick.AddListener(() => { SendAccount(Shared._URL_BASE + "user/add/data"); }); 
             LoginButton.GetComponent<Button>().onClick.AddListener(() => { GoToLogin(); }); 
             Shared.CleanupCart();
         }
@@ -44,7 +44,12 @@ namespace Account {
                 return;
             }
             Account account = new Account(UserName.text, Password.text, Email.text, FirstName.text, LastName.text, "user");
-            StartCoroutine(account.PostToServer(url, Account._DEFAULT_DESTINATION, () => { Debug.Log( "Error adding account" ); }, () => { SceneManager.LoadScene("Login", LoadSceneMode.Single); }));
+            StartCoroutine(account.PostToServer(
+                url,
+                Account._DEFAULT_DESTINATION, 
+                () => { Debug.Log( "Error adding account" ); }, 
+                () => { SceneManager.LoadScene("Login", LoadSceneMode.Single); }
+            ));
         }
  
         public void GoToLogin() {
