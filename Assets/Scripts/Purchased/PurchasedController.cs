@@ -10,8 +10,7 @@ namespace Purchased {
         public string Id;
         public int Issue;
         
-        public void OnPointerClick(PointerEventData eventData)
-        {
+        public void OnPointerClick(PointerEventData eventData) {
             Shared._CURRENT_BOOK_ID = Id;
             Shared._CURRENT_BOOK_ISSUE = Issue;
             SceneManager.LoadScene("Reader", LoadSceneMode.Single);

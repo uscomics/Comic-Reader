@@ -38,7 +38,6 @@ namespace Account {
         }
 
         public IEnumerator PostToServer(string url, string inDestiantion, Callback errorCallback = null, Callback successCallback = null) {
-            Debug.Log(url);
             int errorCode = Validate();
             if (0 != errorCode) {
                 MessageManager.INSTANCE.ShowImageMessage(errorCode);

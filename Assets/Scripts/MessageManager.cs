@@ -21,6 +21,7 @@ public class Messages {
     public static readonly int ERROR_NO_CART = 15;
     public static readonly int SUCCESS_PURCHASE = 16;
     public static readonly int MESSAGE_ALREADY_PURCHASED = 17;
+    public static readonly int SUCCESS_PASSWORD_RESET_REQUEST = 18;
 
     private static readonly string[] messages_en_US = {
         "A user name is required.",
@@ -39,7 +40,8 @@ public class Messages {
         "You don't have any favorites.",
         "Your cart is empty.",
         "Purchase successful.",
-        "You purchased this item on {0}."
+        "You purchased this item on {0}.",
+        "Password reset link sent. Check your email."
     };
 
     public static string GetMessage(Language inLanguage, int inMessageId) {
