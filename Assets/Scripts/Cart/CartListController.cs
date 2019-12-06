@@ -9,10 +9,6 @@ namespace Cart {
         private static string _URL_BASE = Shared._URL_BASE + "comics/";
 
         void Start() {
-            if (String.IsNullOrEmpty(Shared._USERNAME)) {
-                Shared._USERNAME = "dave";
-                Shared._CART = CartList.GetFromServer(String.Format(Shared._URL_BASE + "cart/{0}", Shared._USERNAME));
-            }
             LoadCartFromURL(_URL_BASE + Shared._USERNAME);
         }
     

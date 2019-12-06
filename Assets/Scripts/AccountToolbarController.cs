@@ -22,7 +22,7 @@ public class AccountToolbarController : MonoBehaviour {
         SetButtons();
     }
     public void SetButtons() {
-        if (null == Shared._USERNAME) {
+        if (String.IsNullOrEmpty(Shared._USERNAME)) {
             LoginButton.gameObject.SetActive(true);
             SignupButton.gameObject.SetActive(true);
             LogoutButton.gameObject.SetActive(false);

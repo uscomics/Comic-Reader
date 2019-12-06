@@ -10,10 +10,6 @@ namespace Favorites {
         public static string _URL_BASE = Shared._URL_BASE + "comics/";
 
         void Start() {
-            if (String.IsNullOrEmpty(Shared._USERNAME)) {
-                Shared._USERNAME = "dave";
-                Shared._FAVORITES = FavoritesList.GetFromServer(String.Format(Shared._URL_BASE + "favorites/{0}", Shared._USERNAME));
-            }
             Shared.CleanupCart();
             SortOrder.onValueChanged.AddListener(delegate { GetFromServer(_URL_BASE + Shared._USERNAME); });
             GetFromServer(_URL_BASE + Shared._USERNAME);

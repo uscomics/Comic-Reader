@@ -11,7 +11,6 @@ namespace Purchased {
         private static string _URL_BASE = Shared._URL_BASE + "comics/";
 
         void Start() {
-            if (String.IsNullOrEmpty(Shared._USERNAME)) Shared._USERNAME = "dave";
             SortOrder.onValueChanged.AddListener(delegate { GetFromServer(_URL_BASE + Shared._USERNAME); });
             Shared.CleanupCart();
             GetFromServer(_URL_BASE + Shared._USERNAME);
