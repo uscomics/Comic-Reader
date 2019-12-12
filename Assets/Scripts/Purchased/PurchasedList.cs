@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -7,27 +8,34 @@ using UnityEngine;
 namespace Purchased {
     public class PurchasedList {
         public List<Purchased> Purchased = new List<Purchased>();
+
         public Purchased GetPurchase(string id, int issue) {
             foreach (Purchased book in Purchased) {
-                if (book.id != id || book.issue != issue ) continue;
+                if (book.id != id || book.issue != issue) continue;
                 return book;
             }
+
             return null;
         }
+
         public bool HasPurchase(string id, int issue) {
             foreach (Purchased book in Purchased) {
-                if (book.id != id || book.issue != issue ) continue;
+                if (book.id != id || book.issue != issue) continue;
                 return true;
             }
+
             return false;
         }
+
         public bool HasPurchase(string id, int issue, string purchased) {
             foreach (Purchased book in Purchased) {
                 if (book.id != id || book.issue != issue || book.transactionDate != purchased) continue;
                 return true;
             }
+
             return false;
         }
+
         public void AddPurchase(string id, int issue, string purchased) {
             if (HasPurchase(id, issue, purchased)) return;
             Purchased newIssue = new Purchased();
@@ -36,6 +44,7 @@ namespace Purchased {
             newIssue.transactionDate = purchased;
             Purchased.Add(newIssue);
         }
+
         public void RemovePurchase(string id, int issue) {
             foreach (Purchased i in Purchased) {
                 if (i.id != id || i.issue != issue) continue;
@@ -43,23 +52,28 @@ namespace Purchased {
                 break;
             }
         }
-        public string ToJSON() { 
+
+        public string ToJSON() {
             string json = "[ ";
             for (int i = 0; i < Purchased.Count; i++) {
                 if (0 < i) json += ", ";
                 json += JsonUtility.ToJson(Purchased[i]);
             }
+
             json += " ]";
             return json;
         }
+
         public void FromJSON(string json) {
-            Purchased[] objects = JsonHelper.getJsonArray<Purchased> (json);
+            Purchased[] objects = JsonHelper.getJsonArray<Purchased>(json);
             Purchased = new List<Purchased>(objects);
         }
+
         public void SortByKey() {
             IssueCompare purchasedCompare = new IssueCompare();
-            Purchased.Sort(purchasedCompare); 
+            Purchased.Sort(purchasedCompare);
         }
+
         public void SortByDate() {
             // This is a stable sort.
             // http://www.csharp411.com/c-stable-sort/
@@ -68,21 +82,24 @@ namespace Purchased {
                 Purchased key = Purchased[j];
 
                 int i = j - 1;
-                for (; i >= 0 && Purchased[i].transactionDate.CompareTo( key.transactionDate ) > 0; i--) {
+                for (; i >= 0 && Purchased[i].transactionDate.CompareTo(key.transactionDate) > 0; i--) {
                     Purchased[i + 1] = Purchased[i];
                 }
+
                 Purchased[i + 1] = key;
             }
-            Purchased.Reverse( );
+
+            Purchased.Reverse();
         }
+
         public static PurchasedList GetFromServer(string url) {
             try {
                 HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
-                request.Headers["Authorization"] = Shared._AUTHORIATION;
+                request.Headers.Add(HttpRequestHeader.Authorization, Shared._AUTHORIATION);
 
                 HttpWebResponse response = (HttpWebResponse) request.GetResponse();
 
-                if ( HttpStatusCode.OK != response.StatusCode ) {
+                if (HttpStatusCode.OK != response.StatusCode) {
                     MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_UNABLE_TO_OBTAIN_BOOK_LIST);
                 } else {
                     StreamReader reader = new StreamReader(response.GetResponseStream());
@@ -95,6 +112,7 @@ namespace Purchased {
             } catch (Exception e) {
                 MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
             }
+
             return null;
         }
     }

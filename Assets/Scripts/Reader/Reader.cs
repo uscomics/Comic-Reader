@@ -1,4 +1,4 @@
-﻿using System;
+﻿	using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,6 +14,7 @@ namespace Reader {
 		public Button HomeButton;
 		public Button NextButton;
 		public Button LastButton;
+		public Slider Progress;
 		private int _currentPage;
 		private Book _book;
 		private static string _URL_BASE = Shared._URL_BASE + "comics/";
@@ -22,7 +23,6 @@ namespace Reader {
 		private static float _DISPLAY_CONTROL_DURATION = 5.0f;
 
 		void Start() {
-			if (0 == Shared._CURRENT_BOOK_ISSUE) Shared._CURRENT_BOOK_ISSUE = 1;
 			Shared.CleanupCart();
 			GetManifest(Shared._CURRENT_BOOK_ID, Shared._CURRENT_BOOK_ISSUE);
 			LoadPage();
@@ -32,6 +32,7 @@ namespace Reader {
 			NextButton.GetComponent<Button>().onClick.AddListener(() => { NextClick(); });
 			LastButton.GetComponent<Button>().onClick.AddListener(() => { LastClick(); });
 			_timeOfLastMouseMovement = Time.fixedTime;
+			Progress.value = 0;
 		}
 
 		void Update() {
@@ -70,6 +71,11 @@ namespace Reader {
 				if (Event.current.shift) FirstClick();
 				else PrevClick();
 			}
+
+			if (null ==_book) return;
+			int pages = _book.pages.Length;
+			float progress = ((float) _currentPage + 1) / ((float) pages);
+			Progress.value = progress;
 		}
 
 		public void GetManifest(string id, int issue) {

@@ -39,9 +39,6 @@ namespace StoreItem {
             LoadPage();
         }
         public void LoadPage() {
-            if (0 == Shared._USERNAME.Length) Shared._USERNAME = "dave";
-            if (0 == Shared._CURRENT_BOOK_ID.Length) Shared._CURRENT_BOOK_ID = "gold_venus";
-            if (0 == Shared._CURRENT_BOOK_ISSUE) Shared._CURRENT_BOOK_ISSUE = 1;
             _book = GetManifest(Shared._CURRENT_BOOK_ID, Shared._CURRENT_BOOK_ISSUE);
             _seeAlso1Pages = GetManifest(_book.seeAlso[0].id, _book.seeAlso[0].issue);
             _seeAlso2Pages = GetManifest(_book.seeAlso[1].id, _book.seeAlso[1].issue);

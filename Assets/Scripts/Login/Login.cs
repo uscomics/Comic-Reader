@@ -53,6 +53,7 @@ public class Login : MonoBehaviour {
 		Dictionary<string, string> headers = www.GetResponseHeaders();
 		if (www.isNetworkError || www.isHttpError) {
 			MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_NETWORK);
+			Debug.Log(www.error);
 		}
 		else if (!headers.ContainsKey("Authorization")) {
 			MessageManager.INSTANCE.ShowImageMessage(Messages.ERROR_INVALID_CREDENTIALS);
@@ -87,5 +88,4 @@ public class Login : MonoBehaviour {
 	public void CreateAccount() {
 		SceneManager.LoadScene("AddAccount", LoadSceneMode.Single);
 	}
-	
 }

@@ -1,5 +1,6 @@
 ﻿using Purchased;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 public class Shared
@@ -29,5 +30,4 @@ public class Shared
         EmptyScript s = g.GetComponent<EmptyScript>();
         return s;
     }            
-
 }
